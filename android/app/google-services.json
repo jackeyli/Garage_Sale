@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1029817841156",
+    "firebase_url": "https://garagesale-4054a.firebaseio.com",
+    "project_id": "garagesale-4054a",
+    "storage_bucket": "garagesale-4054a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029817841156:android:ebb1ad599c6edb8b",
+        "android_client_info": {
+          "package_name": "com.jackeyli.garagesale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029817841156-o6tqc8tovbe40n3jm8350e0eif64eq05.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfZXXnza7zvSziXSGLBdiDQ9lHh_oQ8HA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
