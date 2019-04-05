@@ -24,15 +24,11 @@ class ViewPicturePage extends StatelessWidget {
       ));
     }
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Expanded(
+      body: Center(child:
+          Container(
+            constraints: BoxConstraints(minWidth: 150,minHeight: 150),
             child:view
-          )
-        ],
-      )
+          ))
       //CachedNetworkImage(imageUrl: image.imageUrl)
     );
   }

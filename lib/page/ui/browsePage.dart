@@ -47,7 +47,7 @@ class _BrowseState extends State<BrowsePage> {
               ),
               Flexible(
                   flex:1,
-                  child:_state.isLoading ? Center(child:CircularProgressIndicator()):ListViewWidgetItem(controller:controller.widgetController)
+                  child:_state.isLoading ? Center(child:LoadingSignal(message:'Loading...')):ListViewWidgetItem(controller:controller.widgetController)
               )
             ],
           );

@@ -10,7 +10,7 @@ class ItemWidget extends StatelessWidget {
       if(this.item.image.detailImage.width > this.item.image.detailImage.height) {
         this.isHorizontal = true;
       } else {
-        this.isHorizontal = false;
+        this.isHorizontal = true;
         this.isRotateImage = true;
       }
     }
@@ -18,6 +18,7 @@ class ItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget priceWidget = null;
+    debugger();
       priceWidget = Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children:<Widget>[

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1029817841156-s8263qhk4ba9d3hh925dthqgvlh5e9jd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1029817841156-s8263qhk4ba9d3hh925dthqgvlh5e9jd</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1029817841156-h2kspoakkk74kn3fup1mlcc355m89h71.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCtAqnLoHFWxXSX37bgO7L0HrtOCMp-YZ4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1029817841156</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.jackeyli.garagesale</string>
+	<key>PROJECT_ID</key>
+	<string>garagesale-4054a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>garagesale-4054a.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1029817841156:ios:ebb1ad599c6edb8b</string>
+	<key>DATABASE_URL</key>
+	<string>https://garagesale-4054a.firebaseio.com</string>
+</dict>
+</plist>

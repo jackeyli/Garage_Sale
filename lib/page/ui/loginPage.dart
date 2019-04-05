@@ -68,9 +68,7 @@ class _SplashPageState extends State<SplashPage> {
                 ),
               )
             ]) : (<Widget>[
-              Center(child:new CircularProgressIndicator()),
-      Center(child:new SizedBox(width: 20.0)),
-      Center(child:new Text("Please wait5..."))
+              Center(child:LoadingSignal(message: 'Please wait...'))
             ]),
           ),
         ],

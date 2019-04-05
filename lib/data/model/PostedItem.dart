@@ -34,8 +34,9 @@ class PostedItemDao {
     PostedItem item = PostedItem(
         name:snapshot.data['name'],
         price:snapshot.data['price'],
-        image: _PostItemImage.fromMap(Map<String,dynamic>.from(snapshot.data['image'])),
-        descriptionImages: (snapshot.data['descriptionImages'] as List<dynamic>).map((val)=>_PostItemImage.fromMap(Map<String,dynamic>.from(val))).toList(),
+        image: await _PostItemImage.fromMap(Map<String,dynamic>.from(snapshot.data['image'])),
+        descriptionImages: List<_PostItemImage>.from(await Future.wait((snapshot.data['descriptionImages'] as List<dynamic>)
+            .map((val)=>_PostItemImage.fromMap(Map<String,dynamic>.from(val))).toList())),
         description: snapshot.data['description'],
         status:snapshot.data['status'],
         postedDate:snapshot.data['postedDate'],

@@ -45,8 +45,8 @@ class _ItemPostState extends State<ItemPostPage> {
         builder:(context,snapshot) {
             ItemPostViewState _state = snapshot.data;
             Widget view = null;
-            if(_state.isLoading){
-              view = Center(child:CircularProgressIndicator());
+            if(_state.isPosting){
+              view = Center(child:LoadingSignal(message:'Posting your item...'));
             } else {
               Widget column = null;
               List<_PostItemImage> descriptionImageUrls = [];

@@ -1,0 +1,61 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "Chats",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "postItemKey",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "postedDate",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "PostedItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "category",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "postedDate",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "PostedItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "postedDate",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "seller",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "PostedItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "postedDate",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "seller",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image/image.dart' as dartImage;
+part 'package:garage_sale/components/LoadingSignal.dart';
 part 'package:garage_sale/util/ThumbnailUtil.dart';
 part 'package:garage_sale/components/EditBar/EditBar.dart';
 part 'package:garage_sale/components/ItemWidget.dart';
