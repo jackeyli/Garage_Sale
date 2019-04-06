@@ -20,6 +20,7 @@ part 'package:garage_sale/components/LoadingSignal.dart';
 part 'package:garage_sale/util/ThumbnailUtil.dart';
 part 'package:garage_sale/components/EditBar/EditBar.dart';
 part 'package:garage_sale/components/ItemWidget.dart';
+part 'package:garage_sale/components/ImageWidget.dart';
 part 'package:garage_sale/components/ChatWidget/ChatWidget.dart';
 part 'package:garage_sale/components/ChatWidget/controller/ChatWidgetController.dart';
 part 'package:garage_sale/page/ui/myItemPage.dart';

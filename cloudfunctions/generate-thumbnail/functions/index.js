@@ -26,8 +26,7 @@ const fs = require('fs');
 const IMG_PATH = 'Images';
 
 // Max height and width of the thumbnail in pixels.
-const THUMB_MAX_HEIGHT = 300;
-const THUMB_MAX_WIDTH = 300;
+const THUMB_SIZES = [{height:'100',width:'100'},{height:'200',width:'200'},{height:'400',width:'400'}]
 // Thumbnail prefix added to file names.
 const THUMB_PREFIX = 'thumbnails';
 const THUMB_PREFIX_FILENAME = 'Thumb_';
@@ -38,26 +37,36 @@ const THUMB_PREFIX_FILENAME = 'Thumb_';
  * After the thumbnail has been generated and uploaded to Cloud Storage,
  * we write the public URL to the Firebase Realtime Database.
  */
+function generateThumbnailPath(originalDirArr,fileName,sizeObject){
+     const nDirArr = [].concat(originalDirArr);
+     const folder = nDirArr.shift();
+     return path.normalize(
+     path.join(path.join(path.join(folder,THUMB_PREFIX),`${sizeObject.width}_${sizeObject.height}`)
+     ,nDirArr.join(path.delimiter)));
+}
+function generateThumbnailTmpPath(originalDirArr,fileName,sizeObject){
+    return path.normalize(path.join(path.join(os.tmpdir(),originalDirArr.join(path.delimiter)),
+    `${sizeObject.width}_${sizeObject.height}${fileName}`))
+}
 exports.generateThumbnail = functions.storage.object().onFinalize(async (object) => {
   // File and directory paths.
   const filePath = object.name;
 
   // Exit if this is triggered on a file that is not an image.
   // Exit if the image is already a thumbnail.
-  if(!filePath.startsWith(IMG_PATH)) {
+  const originalDirArr = path.dirname(filePath).split(path.delimiter);
+  if(!originalDirArr[0] == IMG_PATH) {
     return console.log('Not a image');
   }
-  if(filePath.startsWith(path.join(IMG_PATH,THUMB_PREFIX).toString())) {
+  if(originalDirArr[1] == THUMB_PREFIX) {
     return console.log('Already is thumbnail');
   }
     const contentType = object.contentType; // This is the image MIME type
-    const fileDir = path.dirname(filePath);
-    const innerPath = fileDir.substr(7,fileDir.length - 7);
     const fileName = path.basename(filePath);
-    const thumbFilePath = path.normalize(path.join(path.join(IMG_PATH,path.join(THUMB_PREFIX,innerPath)), `${fileName}`));
+    const thumbFilePaths = THUMB_SIZES.map((sizeObject)=>generateThumbnailPath(originalDirArr,fileName,sizeObject));
     const tempLocalFile = path.join(os.tmpdir(), filePath);
     const tempLocalDir = path.dirname(tempLocalFile);
-    const tempLocalThumbFile = path.normalize(path.join(path.join(os.tmpdir(),fileDir),`${THUMB_PREFIX_FILENAME}${fileName}`));
+    const tempLocalThumbFiles = THUMB_SIZES.map((sizeObject)=>generateThumbnailTmpPath(originalDirArr,fileName,sizeObject));
   // Cloud Storage files.
   const bucket = admin.storage().bucket(object.bucket);
   const file = bucket.file(filePath);
@@ -74,12 +83,25 @@ exports.generateThumbnail = functions.storage.object().onFinalize(async (object)
   await file.download({destination: tempLocalFile});
   console.log('The file has been downloaded to', tempLocalFile);
   // Generate a thumbnail using ImageMagick.
-  await spawn('convert', [tempLocalFile, '-thumbnail', `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}>`, tempLocalThumbFile], {capture: ['stdout', 'stderr']});
-  console.log('Thumbnail created at', tempLocalThumbFile);
+  let promises = THUMB_SIZES.map((sizeObject,index)=>(async(){
+                                                             await spawn('convert', [tempLocalFile, '-thumbnail', `${sizeObject.width}x${sizeObject.height}>`,
+                                                              tempLocalThumbFiles[index]], {capture: ['stdout', 'stderr']});
+                                                             console.log('Thumbnail created at', tempLocalThumbFiles[index]);
+                                                         })());
+  await Promise.all(promises);
+  console.log('Thumbnail create complete');
   // Uploading the Thumbnail.
-  await bucket.upload(tempLocalThumbFile, {destination: thumbFilePath, metadata: metadata});
-  console.log('Thumbnail uploaded to Storage at', thumbFilePath);
+  promises = tempLocalThumbFiles.map((tempPath,index)=>(
+    async(){
+        await bucket.upload(tempPath,{destination:thumbFilePaths[index],metadata:metadata});
+        console.log('Thumbnail uploaded to Storage at', thumbFilePaths[index]);
+    }
+  )());
+  await Promise.all(promises);
+  console.log('Thumbnail uploaded to Storage complete');
   // Once the image has been uploaded delete the local files to free up disk space.
   fs.unlinkSync(tempLocalFile);
-  fs.unlinkSync(tempLocalThumbFile);
+  tempLocalThumbFiles.forEach((tmpFile)=>{
+    fs.unlinkSync(tmpFile);
+  });
 });

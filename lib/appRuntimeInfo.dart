@@ -11,4 +11,6 @@ class AppRuntimeInfo {
     "directions_car":Icons.directions_car,
     "mouse":Icons.mouse
   };
+  final String IMG_PATH = 'Images';
+  final String IMG_THUMBNAIL_PATH = 'thumbnails';
 }

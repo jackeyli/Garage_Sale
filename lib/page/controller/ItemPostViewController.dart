@@ -2,9 +2,10 @@ part of garage_sale;
 
 class ItemPostViewState {
   PostedItem _item = PostedItem(descriptionImages:[]);
-  _PostItemImage image = null;
-  List<_PostItemImage> descriptionImages = [];
+  _Image image = null;
+  List<_Image> descriptionImages = [];
   bool isPosting = false;
+  _Image currentEditingImage = null;
 }
 
 class ItemPostViewController {
@@ -20,27 +21,24 @@ class ItemPostViewController {
       DocumentReference ref = await PostedItemDao.insert(_state._item, tx);
       if(_state.image != null) {
         _state._item.image = _state.image;
-        String downloadUrl = await (await FirebaseStorage.instance.ref().child("Images/ItemImages/descriptions/${ref.documentID}")
-            .child("imageUrl").putData(_state._item.image.detailImage.data).onComplete).ref.getDownloadURL();
-        _state._item.image.detailImage.imageUrl = downloadUrl;
-        _state._item.image.detailImage.imagePath = "Images/ItemImages/descriptions/${ref.documentID}/imageUrl";
-        _state._item.image.thumbNailImage.imagePath = "Images/thumbnails/ItemImages/descriptions/${ref.documentID}/imageUrl";
-        await tx.update(ref,<String,dynamic>{'image':_state._item.image.toMap()});
+        String downloadUrl = await (await FirebaseStorage.instance.ref().child("${_appRuntimeInfo.IMG_PATH}/ItemImages/descriptions/${ref.documentID}")
+            .child("imageUrl").putData(_state._item.image.data).onComplete).ref.getDownloadURL();
+        _state._item.image.imageUrl = downloadUrl;
+        _state._item.image.imagePath = "ItemImages/descriptions/${ref.documentID}/imageUrl";
       }
       if(_state.descriptionImages.length > 0){
         List<Future<String>> uploadFiles = [];
         for(int i = 0; i < _state.descriptionImages.length;i ++){
           _state._item.descriptionImages.add(_state.descriptionImages[i]);
           uploadFiles.add(new Future<String>(() async{
-            return await (await FirebaseStorage.instance.ref().child("Images/ItemImages/descriptions/${ref.documentID}")
-                .child("descriptionImages_${i}").putData(_state._item.descriptionImages[i].detailImage.data).onComplete).ref.getDownloadURL();
+            return await (await FirebaseStorage.instance.ref().child("${_appRuntimeInfo.IMG_PATH}/ItemImages/descriptions/${ref.documentID}")
+                .child("descriptionImages_${i}").putData(_state._item.descriptionImages[i].data).onComplete).ref.getDownloadURL();
           }));
-          _state._item.descriptionImages[i].detailImage.imagePath = "Images/ItemImages/descriptions/${ref.documentID}/descriptionImages_${i}";
-          _state._item.descriptionImages[i].thumbNailImage.imagePath = "Images/thumbnails/ItemImages/descriptions/${ref.documentID}/descriptionImages_${i}";
+          _state._item.descriptionImages[i].imagePath = "ItemImages/descriptions/${ref.documentID}/descriptionImages_${i}";
         }
         List<String> downloadUrls = await Future.wait(uploadFiles);
         for(int i = 0; i < downloadUrls.length; i ++){
-          _state._item.descriptionImages[i].detailImage.imageUrl = downloadUrls[i];
+          _state._item.descriptionImages[i].imageUrl = downloadUrls[i];
         }
         await tx.update(ref,<String,dynamic>{'descriptionImages':_state._item.descriptionImages
             .map((img)=>img.toMap()).toList()});
@@ -71,18 +69,46 @@ class ItemPostViewController {
   void sync() {
     _streamCtrl.add(_state);
   }
-  Future<bool> pickImage(ImageSource source) async{
-    _Image img = _Image.fromFile(await ImagePicker.pickImage(source: source));
-    if(_state.image == null) {
-      _state.image = _PostItemImage(
-        detailImage: img,
-        thumbNailImage: _Image(width:img.width,height:img.height)
-      );
+  bool deleteImage(_Image image){
+    if(image == _state.image){
+      if(_state.descriptionImages.length > 0){
+        _state.image = _state.descriptionImages[0];
+        _state.descriptionImages.removeAt(0);
+      } else {
+        _state.image = null;
+      }
     } else {
-      _state.descriptionImages.add(_PostItemImage(
-          detailImage: img,
-          thumbNailImage: _Image(width:img.width,height:img.height)
-      ));
+      for(int i = 0; i < _state.descriptionImages.length; i ++){
+        if(_state.descriptionImages[i] == image){
+          _state.descriptionImages.removeAt(i);
+          break;
+        }
+      }
+    }
+    sync();
+  }
+  bool setEditingImage(_Image img){
+    _state.currentEditingImage = img;
+  }
+  Future<bool> pickImage(ImageSource source) async{
+    if(_state.currentEditingImage == null) {
+      if (_state.image == null) {
+        _state.image = _Image.fromFile(await ImagePicker.pickImage(source: source));
+      } else {
+        _state.descriptionImages.add(
+            _Image.fromFile(await ImagePicker.pickImage(source: source)));
+      }
+    } else {
+      if(_state.currentEditingImage == _state.image){
+        _state.image = _Image.fromFile(await ImagePicker.pickImage(source: source));
+      } else {
+        for(int i = 0; i < _state.descriptionImages.length; i ++){
+          if(_state.descriptionImages[i] == _state.currentEditingImage){
+            _state.descriptionImages[i] = _Image.fromFile(await ImagePicker.pickImage(source: source));
+            break;
+          }
+        }
+      }
     }
     sync();
   }

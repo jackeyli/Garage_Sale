@@ -1,39 +1,22 @@
 part of garage_sale;
-
-class _PostItemImage {
-  _Image detailImage;
-  _Image thumbNailImage;
-  _PostItemImage({this.detailImage,this.thumbNailImage});
-  static Future<_PostItemImage> fromMap(Map<String,dynamic> map) async{
-    _Image detailImage = _Image.fromMap(Map<String,dynamic>.from(map['detailImage']));
-    _Image thumbNailImage = _Image.fromMap(Map<String,dynamic>.from(map['thumbNailImage']));
-    if(thumbNailImage.imageUrl == null){
-      try {
-        thumbNailImage.imageUrl = await FirebaseStorage.instance.ref()
-            .child(thumbNailImage.imagePath).getDownloadURL();
-      }catch(e){
-
-      }
-    }
-    return _PostItemImage(
-      detailImage:detailImage,
-      thumbNailImage:thumbNailImage
-    );
-  }
-  Map<String,dynamic> toMap(){
-    return {
-      'detailImage':this.detailImage.toMap(),
-      'thumbNailImage':this.thumbNailImage.toMap()
-    };
-  }
+enum ThumbNailSize {
+  THUMBNAIL_SIZE_100,
+  THUMBNAIL_SIZE_200,
+  THUMBNAIL_SIZE_400
 }
+const Map<ThumbNailSize, String> ThumbNailSizeName = {
+  ThumbNailSize.THUMBNAIL_SIZE_100: "100",
+  ThumbNailSize.THUMBNAIL_SIZE_200: "200",
+  ThumbNailSize.THUMBNAIL_SIZE_400: "400"
+};
 class _Image {
   String imageUrl;
   String imagePath;
+  Map<String,String> thumbNailUrls;
   Uint8List data;
   int width;
   int height;
-  _Image({this.imageUrl,this.data,this.width,this.height,this.imagePath});
+  _Image({this.imageUrl,this.data,this.width,this.height,this.imagePath,this.thumbNailUrls = const {}});
   static _Image fromMap(Map<String,dynamic> map){
     return _Image(
       imageUrl:map['imageUrl'],
@@ -42,6 +25,19 @@ class _Image {
       height:map['height'],
       imagePath: map['imagePath']
     );
+  }
+  String _getThumbNailPath(String size){
+    return '${_appRuntimeInfo.IMG_PATH}/'
+        '${_appRuntimeInfo.IMG_THUMBNAIL_PATH}/${size}_${size}/${this.imagePath}';
+  }
+  Future<String> _getThumbNailUrl(String size) async {
+    return await FirebaseStorage.instance.ref().child(_getThumbNailPath(size)).getDownloadURL();
+  }
+   Future<bool> getThumbNail(ThumbNailSize size) async{
+    if(!this.thumbNailUrls.containsKey(ThumbNailSizeName[size])){
+      this.thumbNailUrls[ThumbNailSizeName[size]] = await this._getThumbNailUrl(ThumbNailSizeName[size]);
+    }
+    return true;
   }
   static _Image fromFile(File file){
     List<int> fileData = file.readAsBytesSync();
@@ -53,7 +49,8 @@ class _Image {
       'imageUrl':this.imageUrl,
       'width':this.width,
       'height':this.height,
-      'imagePath':this.imagePath
+      'imagePath':this.imagePath,
+      'thumbNailUrls':this.thumbNailUrls
     };
   }
 }

@@ -7,7 +7,7 @@ class ItemWidget extends StatelessWidget {
   User postUser;
   ItemWidget({this.item,this.isHorizontal = false,this.isAuto = false}) {
     if(this.isAuto){
-      if(this.item.image.detailImage.width > this.item.image.detailImage.height) {
+      if(this.item.image.width > this.item.image.height) {
         this.isHorizontal = true;
       } else {
         this.isHorizontal = true;
@@ -54,27 +54,15 @@ class ItemWidget extends StatelessWidget {
                 ))
           ]);
     List<Widget> contents = [
-      isRotateImage ?
-          RotatedBox(
-            quarterTurns: 1,
-            child:CachedNetworkImage(
-                placeholder: (context,string)=>
-                    Center(
-                        child:Container(
-                            width:100,
-                            height:100,
-                            child:Image.asset("assets/images/default_image.jpg"))),
-                imageUrl: item.image.thumbNailImage.imageUrl
-            )
-          ): (CachedNetworkImage(
-          placeholder: (context,string)=>
-              Center(
-                  child:Container(
-                      width:100,
-                      height:100,
-                      child:Image.asset("assets/images/default_image.jpg"))),
-          imageUrl: item.image.thumbNailImage.imageUrl
-      )),
+      ImageWidget(
+        image:item.image,
+        size:ThumbNailSize.THUMBNAIL_SIZE_400,
+        decorator: isRotateImage ? ImageDecorator(
+          rotateDecorator: {
+            'quaterTurn':1
+          }
+        ):null,
+      ),
       Container(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child:Column(

@@ -41,27 +41,22 @@ class _ItemDetailState extends State<ItemDetailPage> {
   }
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  Widget _getImageWidget(BuildContext context,_PostItemImage img,bool showDetail) {
+  Widget _getImageWidget(BuildContext context,_Image img,ThumbNailSize size) {
     if (img == null) {
       return Container();
     }
-    Widget widget = Container(
-        padding: const EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
-        child: CachedNetworkImage(
-            placeholder: (context,string)=>Center(child:CircularProgressIndicator()),
-            imageUrl: showDetail ? img.detailImage.imageUrl : img.thumbNailImage.imageUrl
-        )
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
+      child:ImageWidget(image:img,
+      size:size,
+      decorator: ImageDecorator(
+         clickableDecorator: {
+           'callback':(){
+             Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ViewPicturePage(image: img)));
+           }
+         }
+      ))
     );
-    if(img.detailImage.imageUrl != null) {
-      return GestureDetector(
-        onTap:(){
-          Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ViewPicturePage(image: img.detailImage)));
-        },
-        child:widget
-      );
-    } else {
-      return widget;
-    }
   }
   @override
   Widget build(BuildContext context) {
@@ -85,7 +80,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
             );
           } else {
             Widget column = null;
-            List<_PostItemImage > descriptionImages = [];
+            List<_Image > descriptionImages = [];
             descriptionImages.addAll(_state._item.descriptionImages);
             int i = descriptionImages.length - 1;
             if(i < 0)
@@ -97,16 +92,16 @@ class _ItemDetailState extends State<ItemDetailPage> {
               column = Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    _getImageWidget(context,_state._item.image,true),
+                    _getImageWidget(context,_state._item.image,null),
                     _state._item.descriptionImages.length > 0 ? GridView.count(
                         shrinkWrap: true,
                         crossAxisSpacing: 4,
                         crossAxisCount: 4,
                         children: <Widget>[
-                          _getImageWidget(context,descriptionImages[0],false),
-                          _getImageWidget(context,descriptionImages[1],false),
-                          _getImageWidget(context,descriptionImages[2],false),
-                          _getImageWidget(context,descriptionImages[3],false)
+                          _getImageWidget(context,descriptionImages[0],ThumbNailSize.THUMBNAIL_SIZE_100),
+                          _getImageWidget(context,descriptionImages[1],ThumbNailSize.THUMBNAIL_SIZE_100),
+                          _getImageWidget(context,descriptionImages[2],ThumbNailSize.THUMBNAIL_SIZE_100),
+                          _getImageWidget(context,descriptionImages[3],ThumbNailSize.THUMBNAIL_SIZE_100)
                         ]
                     ) : null,
                   ].where((widget)=>widget != null).toList());

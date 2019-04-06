@@ -23,18 +23,108 @@ class _ItemPostState extends State<ItemPostPage> {
       );
     }).toList();
   }
-  Widget _getImageWidget(_PostItemImage file) {
+  Widget _getImageWidget(_Image file) {
     if (file == null) {
       return null;
     }
-    Image origin = Image.memory(file.detailImage.data);
-    return Container(
-        padding: const EdgeInsets.symmetric(vertical: 4.0,horizontal: 4.0),
-        child: FittedBox(
-            fit: BoxFit.contain,
-            alignment: Alignment.center,
-            child: origin
-        )
+    Image origin = Image.memory(file.data);
+    return ImageWidget(
+      image:file,
+      size:null,
+      loadFromRawData:true,
+      decorator: ImageDecorator(actionableDecorator: {
+        'actions':<Widget>[
+          Positioned(
+              top:20,
+              right:20,
+              child:IconButton(icon: Icon(Icons.delete),
+                  onPressed: (){
+                    controller.deleteImage(file);
+                  })
+          ),
+          Positioned(
+            top:20,
+            left:20,
+            child:IconButton(icon: Icon(Icons.edit),
+                onPressed: (){
+                  controller.setEditingImage(file);
+                  ShowPickImageBottomSheet();
+                })
+          )
+        ]
+      }),
+    );
+  }
+  void ShowPickImageBottomSheet() {
+    if (bottomSheet != null) {
+      bottomSheet.close();
+    }
+    bottomSheet = _scaffoldKey.currentState
+        .showBottomSheet(
+            (context) {
+          return Container(
+              padding: const EdgeInsets
+                  .symmetric(vertical: 4.0),
+              color: Colors.blueGrey,
+              height: 60,
+              child: Row(
+                  mainAxisSize: MainAxisSize
+                      .max,
+                  mainAxisAlignment: MainAxisAlignment
+                      .start,
+                  children: <Widget>[
+                    FlatButton(
+                        child: Column(
+                          children: <
+                              Widget>[
+                            Icon(Icons
+                                .insert_drive_file,
+                                color: Colors
+                                    .grey[200]),
+                            SizedBox(
+                                height: 10,
+                                width: 10),
+                            Text('File',
+                                style: TextStyle(
+                                    color: Colors
+                                        .grey[200]))
+                          ],
+                        ),
+                        onPressed: () {
+                          controller
+                              .pickImage(
+                              ImageSource
+                                  .gallery);
+                        }
+                    ),
+                    SizedBox(width: 8),
+                    FlatButton(
+                        child: Column(
+                          children: <
+                              Widget>[
+                            Icon(Icons
+                                .camera_enhance,
+                                color: Colors
+                                    .grey[200]),
+                            SizedBox(
+                                height: 10,
+                                width: 10),
+                            Text('Camera',
+                                style: TextStyle(
+                                    color: Colors
+                                        .grey[200]))
+                          ],
+                        ),
+                        onPressed: () {
+                          controller
+                              .pickImage(
+                              ImageSource
+                                  .camera);
+                        }
+                    )
+                  ]
+              ));
+        }
     );
   }
   @override
@@ -49,7 +139,7 @@ class _ItemPostState extends State<ItemPostPage> {
               view = Center(child:LoadingSignal(message:'Posting your item...'));
             } else {
               Widget column = null;
-              List<_PostItemImage> descriptionImageUrls = [];
+              List<_Image> descriptionImageUrls = [];
               descriptionImageUrls.addAll(_state.descriptionImages);
               int i = descriptionImageUrls.length - 1;
               if (i < 0)
@@ -172,75 +262,7 @@ class _ItemPostState extends State<ItemPostPage> {
                                         ],
                                       ),
                                       onPressed: () {
-                                        if (bottomSheet != null)
-                                          return;
-                                        bottomSheet = _scaffoldKey.currentState
-                                            .showBottomSheet(
-                                                (context) {
-                                              return Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 4.0),
-                                                  color: Colors.blueGrey,
-                                                  height: 60,
-                                                  child: Row(
-                                                      mainAxisSize: MainAxisSize
-                                                          .max,
-                                                      mainAxisAlignment: MainAxisAlignment
-                                                          .start,
-                                                      children: <Widget>[
-                                                        FlatButton(
-                                                            child: Column(
-                                                              children: <
-                                                                  Widget>[
-                                                                Icon(Icons
-                                                                    .insert_drive_file,
-                                                                    color: Colors
-                                                                        .grey[200]),
-                                                                SizedBox(
-                                                                    height: 10,
-                                                                    width: 10),
-                                                                Text('File',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .grey[200]))
-                                                              ],
-                                                            ),
-                                                            onPressed: () {
-                                                              controller
-                                                                  .pickImage(
-                                                                  ImageSource
-                                                                      .gallery);
-                                                            }
-                                                        ),
-                                                        SizedBox(width: 8),
-                                                        FlatButton(
-                                                            child: Column(
-                                                              children: <
-                                                                  Widget>[
-                                                                Icon(Icons
-                                                                    .camera_enhance,
-                                                                    color: Colors
-                                                                        .grey[200]),
-                                                                SizedBox(
-                                                                    height: 10,
-                                                                    width: 10),
-                                                                Text('Camera',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .grey[200]))
-                                                              ],
-                                                            ),
-                                                            onPressed: () {
-                                                              controller
-                                                                  .pickImage(
-                                                                  ImageSource
-                                                                      .camera);
-                                                            }
-                                                        )
-                                                      ]
-                                                  ));
-                                            }
-                                        );
+                                        ShowPickImageBottomSheet();
                                       }
                                   )),
 
