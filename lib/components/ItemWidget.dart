@@ -18,7 +18,6 @@ class ItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget priceWidget = null;
-    debugger();
       priceWidget = Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children:<Widget>[

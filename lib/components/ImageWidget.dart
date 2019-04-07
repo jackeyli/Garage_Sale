@@ -85,7 +85,7 @@ class ImageWidget extends StatefulWidget {
 class _ImageWidgetState extends State<ImageWidget> {
   final _Image image;
   final ThumbNailSize size;
-  final int maxCount = 2;
+  final int maxCount = 4;
   final loadFromRawData;
   final ImageDecorator decorator;
   _ImageWidgetState({this.image,this.size = null,this.decorator,this.loadFromRawData});
@@ -106,7 +106,7 @@ class _ImageWidgetState extends State<ImageWidget> {
     try{
       await image.getThumbNail(size);
       if(!image.thumbNailUrls.containsKey(ThumbNailSizeName[size])) {
-        return await Future.delayed(Duration(seconds: 1),
+        return await Future.delayed(Duration(seconds: 3),
                 ()async{
               return await tryFetchImageThumbNail(tryCount + 1);
             });
@@ -114,7 +114,7 @@ class _ImageWidgetState extends State<ImageWidget> {
         return true;
       }
     }catch(e){
-      return await Future.delayed(Duration(seconds: 1),
+      return await Future.delayed(Duration(seconds: 3),
               ()async{
             return await tryFetchImageThumbNail(tryCount + 1);
           });
@@ -131,13 +131,8 @@ class _ImageWidgetState extends State<ImageWidget> {
   Widget build(BuildContext context) {
     String imgUrl = _getImageUrl();
     Widget imageContent = null;
-    if(imgUrl == null) {
-      imageContent = Container(
-          width:100,
-          height:100,
-          child:Image.asset("assets/images/default_image.jpg"));
-    } else {
-      if(!loadFromRawData) {
+    if(!loadFromRawData){
+      if(imgUrl != null) {
         imageContent = CachedNetworkImage(
             placeholder: (context, string) =>
                 Center(
@@ -148,12 +143,17 @@ class _ImageWidgetState extends State<ImageWidget> {
             imageUrl: imgUrl
         );
       } else {
-        imageContent = FittedBox(
-            fit: BoxFit.contain,
-            alignment: Alignment.center,
-            child: Image.memory(image.data)
-        );
+        imageContent = Container(
+            width:100,
+            height:100,
+            child:Image.asset("assets/images/default_image.jpg"));
       }
+    } else {
+      imageContent = FittedBox(
+          fit: BoxFit.contain,
+          alignment: Alignment.center,
+          child: Image.memory(image.data)
+      );
     }
     if(decorator != null){
       imageContent = this.decorator.apply(imageContent);

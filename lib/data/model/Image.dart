@@ -16,14 +16,18 @@ class _Image {
   Uint8List data;
   int width;
   int height;
-  _Image({this.imageUrl,this.data,this.width,this.height,this.imagePath,this.thumbNailUrls = const {}});
+  _Image({this.imageUrl,this.data,this.width,this.height,this.imagePath,this.thumbNailUrls}) {
+    if(thumbNailUrls == null)
+      thumbNailUrls = {};
+  }
   static _Image fromMap(Map<String,dynamic> map){
     return _Image(
       imageUrl:map['imageUrl'],
       data:Uint8List.fromList([]),
       width:map['width'],
       height:map['height'],
-      imagePath: map['imagePath']
+      imagePath: map['imagePath'],
+      thumbNailUrls:Map<String,String>.from(map['thumbNailUrls'])
     );
   }
   String _getThumbNailPath(String size){
@@ -31,12 +35,21 @@ class _Image {
         '${_appRuntimeInfo.IMG_THUMBNAIL_PATH}/${size}_${size}/${this.imagePath}';
   }
   Future<String> _getThumbNailUrl(String size) async {
-    return await FirebaseStorage.instance.ref().child(_getThumbNailPath(size)).getDownloadURL();
+    String thumbNailPath = _getThumbNailPath(size);
+    return await FirebaseStorage.instance.ref().child(thumbNailPath).getDownloadURL();
   }
    Future<bool> getThumbNail(ThumbNailSize size) async{
     if(!this.thumbNailUrls.containsKey(ThumbNailSizeName[size])){
       this.thumbNailUrls[ThumbNailSizeName[size]] = await this._getThumbNailUrl(ThumbNailSizeName[size]);
     }
+    return true;
+  }
+  bool reloadFromFile(File file){
+    List<int> fileData = file.readAsBytesSync();
+    dartImage.Image _img = dartImage.decodeImage(fileData);
+    this.width = _img.width;
+    this.height = _img.height;
+    this.data = Uint8List.fromList(fileData);
     return true;
   }
   static _Image fromFile(File file){

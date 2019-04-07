@@ -25,6 +25,7 @@ class ItemPostViewController {
             .child("imageUrl").putData(_state._item.image.data).onComplete).ref.getDownloadURL();
         _state._item.image.imageUrl = downloadUrl;
         _state._item.image.imagePath = "ItemImages/descriptions/${ref.documentID}/imageUrl";
+        await tx.update(ref,<String,dynamic>{'image':_state._item.image.toMap()});
       }
       if(_state.descriptionImages.length > 0){
         List<Future<String>> uploadFiles = [];
@@ -85,6 +86,8 @@ class ItemPostViewController {
         }
       }
     }
+    if(_state.currentEditingImage == image)
+      _state.currentEditingImage = null;
     sync();
   }
   bool setEditingImage(_Image img){
@@ -99,12 +102,13 @@ class ItemPostViewController {
             _Image.fromFile(await ImagePicker.pickImage(source: source)));
       }
     } else {
+      File file = await ImagePicker.pickImage(source: source);
       if(_state.currentEditingImage == _state.image){
-        _state.image = _Image.fromFile(await ImagePicker.pickImage(source: source));
+        _state.image.reloadFromFile(file);
       } else {
         for(int i = 0; i < _state.descriptionImages.length; i ++){
           if(_state.descriptionImages[i] == _state.currentEditingImage){
-            _state.descriptionImages[i] = _Image.fromFile(await ImagePicker.pickImage(source: source));
+            _state.descriptionImages[i].reloadFromFile(file);
             break;
           }
         }

@@ -27,33 +27,45 @@ class _ItemPostState extends State<ItemPostPage> {
     if (file == null) {
       return null;
     }
-    Image origin = Image.memory(file.data);
-    return ImageWidget(
+    return
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10.0),
+          child:ImageWidget(
       image:file,
       size:null,
       loadFromRawData:true,
       decorator: ImageDecorator(actionableDecorator: {
-        'actions':<Widget>[
+        'actions':<Positioned>[
           Positioned(
               top:20,
               right:20,
-              child:IconButton(icon: Icon(Icons.delete),
-                  onPressed: (){
-                    controller.deleteImage(file);
-                  })
+              child:Container(
+                width:40,
+                height:40,
+                color:Colors.blueGrey,
+                child:IconButton(icon: Icon(Icons.delete,color:Colors.white),
+                    onPressed: (){
+                      controller.deleteImage(file);
+                    })
+              )
           ),
           Positioned(
-            top:20,
-            left:20,
-            child:IconButton(icon: Icon(Icons.edit),
-                onPressed: (){
-                  controller.setEditingImage(file);
-                  ShowPickImageBottomSheet();
-                })
+              top:20,
+              left:20,
+              child:Container(
+                  width:40,
+                  height:40,
+                  color:Colors.blueGrey,
+                  child:IconButton(icon: Icon(Icons.edit,color:Colors.white),
+                      onPressed: (){
+                        controller.setEditingImage(file);
+                        ShowPickImageBottomSheet();
+                      })
+              )
           )
         ]
       }),
-    );
+    ));
   }
   void ShowPickImageBottomSheet() {
     if (bottomSheet != null) {
@@ -262,6 +274,7 @@ class _ItemPostState extends State<ItemPostPage> {
                                         ],
                                       ),
                                       onPressed: () {
+                                        controller.setEditingImage(null);
                                         ShowPickImageBottomSheet();
                                       }
                                   )),

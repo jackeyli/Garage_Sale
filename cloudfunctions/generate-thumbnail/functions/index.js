@@ -41,11 +41,11 @@ function generateThumbnailPath(originalDirArr,fileName,sizeObject){
      const nDirArr = [].concat(originalDirArr);
      const folder = nDirArr.shift();
      return path.normalize(
-     path.join(path.join(path.join(folder,THUMB_PREFIX),`${sizeObject.width}_${sizeObject.height}`)
-     ,nDirArr.join(path.delimiter)));
+     path.join(path.join(path.join(path.join(folder,THUMB_PREFIX),`${sizeObject.width}_${sizeObject.height}`)
+     ,nDirArr.join(path.sep)),`${fileName}`));
 }
 function generateThumbnailTmpPath(originalDirArr,fileName,sizeObject){
-    return path.normalize(path.join(path.join(os.tmpdir(),originalDirArr.join(path.delimiter)),
+    return path.normalize(path.join(path.join(os.tmpdir(),originalDirArr.join(path.sep)),
     `${sizeObject.width}_${sizeObject.height}${fileName}`))
 }
 exports.generateThumbnail = functions.storage.object().onFinalize(async (object) => {
@@ -54,11 +54,13 @@ exports.generateThumbnail = functions.storage.object().onFinalize(async (object)
 
   // Exit if this is triggered on a file that is not an image.
   // Exit if the image is already a thumbnail.
-  const originalDirArr = path.dirname(filePath).split(path.delimiter);
-  if(!originalDirArr[0] == IMG_PATH) {
+  console.log(path.sep)
+  const originalDirArr = path.dirname(filePath).split(path.sep);
+  console.log(originalDirArr[0]);
+  if(originalDirArr[0] !== IMG_PATH) {
     return console.log('Not a image');
   }
-  if(originalDirArr[1] == THUMB_PREFIX) {
+  if(originalDirArr[1] === THUMB_PREFIX) {
     return console.log('Already is thumbnail');
   }
     const contentType = object.contentType; // This is the image MIME type
@@ -70,7 +72,6 @@ exports.generateThumbnail = functions.storage.object().onFinalize(async (object)
   // Cloud Storage files.
   const bucket = admin.storage().bucket(object.bucket);
   const file = bucket.file(filePath);
-  const thumbFile = bucket.file(thumbFilePath);
   const metadata = {
     contentType: contentType,
     // To enable Client-side caching you can set the Cache-Control headers here. Uncomment below.
@@ -83,7 +84,7 @@ exports.generateThumbnail = functions.storage.object().onFinalize(async (object)
   await file.download({destination: tempLocalFile});
   console.log('The file has been downloaded to', tempLocalFile);
   // Generate a thumbnail using ImageMagick.
-  let promises = THUMB_SIZES.map((sizeObject,index)=>(async(){
+  let promises = THUMB_SIZES.map((sizeObject,index)=>(async()=>{
                                                              await spawn('convert', [tempLocalFile, '-thumbnail', `${sizeObject.width}x${sizeObject.height}>`,
                                                               tempLocalThumbFiles[index]], {capture: ['stdout', 'stderr']});
                                                              console.log('Thumbnail created at', tempLocalThumbFiles[index]);
@@ -92,7 +93,7 @@ exports.generateThumbnail = functions.storage.object().onFinalize(async (object)
   console.log('Thumbnail create complete');
   // Uploading the Thumbnail.
   promises = tempLocalThumbFiles.map((tempPath,index)=>(
-    async(){
+    async()=>{
         await bucket.upload(tempPath,{destination:thumbFilePaths[index],metadata:metadata});
         console.log('Thumbnail uploaded to Storage at', thumbFilePaths[index]);
     }
