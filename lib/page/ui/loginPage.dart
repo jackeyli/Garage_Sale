@@ -19,6 +19,7 @@ class _SplashPageState extends State<SplashPage> {
           }
           _appRuntimeInfo.currentUser = _user;
           isLogin = false;
+          _firebaseMessaging.subscribeToTopic(_user.id);
           Navigator.of(context).pushReplacementNamed('/Home');
     });
     // Listen for our auth even (on reload or start)

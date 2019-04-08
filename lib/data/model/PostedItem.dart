@@ -1,4 +1,7 @@
 part of garage_sale;
+const POSTEDITEMSTATUS_POSTED = "Posted";
+const POSTEDITEMSTATUS_BOOKED = "Booked";
+const POSTEDITEMSTATUS_SOLD = "Sold";
 class PostedItem{
   double price;
   String name;
@@ -8,10 +11,11 @@ class PostedItem{
   List<_Image> descriptionImages = [];
   String category;
   String status;
+  User bookingUser;
   User seller;
   DateTime postedDate;
   PostedItem({this.id,this.name,this.price,this.description,this.image,this.descriptionImages = const []
-  ,this.status = "Posted",this.seller,this.category = "Phone",this.postedDate}) {
+  ,this.status = POSTEDITEMSTATUS_POSTED,this.seller,this.category = "Phone",this.postedDate,this.bookingUser}) {
   }
   Map<String,dynamic> toMap(){
     return {
@@ -22,6 +26,7 @@ class PostedItem{
       'descriptionImages':this.descriptionImages.map((img)=>img.toMap()).toList(),
       'category':this.category,
       'status':this.status,
+      'bookingUser':this.bookingUser == null ? null:this.bookingUser.id,
       'seller':this.seller.id,
       'postedDate':this.postedDate
     };
@@ -39,10 +44,13 @@ class PostedItemDao {
             .map((val)=>_Image.fromMap(Map<String,dynamic>.from(val))).toList()),
         description: snapshot.data['description'],
         status:snapshot.data['status'],
-        postedDate:snapshot.data['postedDate'],
+        postedDate:(snapshot.data['postedDate'] as Timestamp).toDate(),
         id:snapshot.documentID
     );
     item.seller = await UserDao.findUser(snapshot.data['seller']);
+    if(snapshot.data['bookingUser'] != null) {
+      item.bookingUser = await UserDao.findUser(snapshot.data['bookingUser']);
+    }
     return item;
   }
   static Future<PostedItem> findById(String id) async{

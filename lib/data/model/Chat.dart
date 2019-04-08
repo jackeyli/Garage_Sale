@@ -34,7 +34,7 @@ class ChatDao {
       replyTo:map['replyTo'],
       subChats:subChats,
       content:map['content'],
-      postedDate:map['postedDate']
+      postedDate:(map['postedDate'] as Timestamp).toDate()
     );
   }
   static Future<Chat> fromSnapshot(DocumentSnapshot snapshot) async{

@@ -15,11 +15,18 @@ class _ItemPostState extends State<ItemPostPage> {
   }
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<Widget> _getCategoryLists(List<String> items){
-    return items.map((String str){
+  List<Widget> _getCategoryLists(){
+    return _appRuntimeInfo.supportedCategories.map((Map<String,String> map){
       return DropdownMenuItem(
-        value: str,
-        child: Text(str)
+        value:map['value'],
+        child:Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Icon(_appRuntimeInfo.categoryIcons[map['icon']],color:Colors.blueGrey[200]),
+              SizedBox(height:10,width:10),
+              Text(map['value']),
+            ],
+        )
       );
     }).toList();
   }
@@ -203,12 +210,7 @@ class _ItemPostState extends State<ItemPostPage> {
                                                 isSync: true, category: value);
                                           },
                                           //value:_state._item.category,
-                                          items: _getCategoryLists(
-                                              _appRuntimeInfo
-                                                  .supportedCategories.map((Map<
-                                                  String,
-                                                  String> map) => map['value'])
-                                                  .toList())
+                                          items: _getCategoryLists()
                                       ),
                                       TextFormField(
                                           decoration: new InputDecoration(

@@ -146,33 +146,68 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                     Text("${_state._item.seller.email}",style:TextStyle(fontSize:12,color:Colors.grey)),
                                     SizedBox(width:10,height:10),
                                     Text("${_state._item.seller.phone}",style:TextStyle(fontSize:12,color:Colors.grey))])),
-
+                          _state._item.status == POSTEDITEMSTATUS_BOOKED ?
+                              Container(
+                                padding:const EdgeInsets.symmetric(horizontal: 20),
+                                child:Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(width:10,height:10),
+                                    Text("Booked by",style:TextStyle(fontSize:14,color:Colors.black)),
+                                    SizedBox(width:10,height:10),
+                                    Text("${_state._item.bookingUser.name}",style:TextStyle(fontSize:12,color:Colors.grey)),
+                                    SizedBox(width:10,height:10),
+                                    Text("${_state._item.bookingUser.email}",style:TextStyle(fontSize:12,color:Colors.grey)),
+                                    SizedBox(width:10,height:10),
+                                    Text("${_state._item.bookingUser.phone}",style:TextStyle(fontSize:12,color:Colors.grey))
+                                  ],
+                                )
+                              ): null,
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                             child:Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                    child:MaterialButton(
-                                    color:Colors.blueGrey,
-                                    minWidth: 30,
-                                    height:20,
-                                    child: Text("Comment",
-                                        style:TextStyle(
-                                            fontSize:10,
-                                            color: Colors.white
-                                        )),
-                                    onPressed:(){
-                                      _msgBus.publish(MessageTopics.OpenEditing,CommandMessage(
-                                          params: {
-                                            "callback":(value){
-                                              controller.postChat(content:value);
-                                            }
-                                          }
-                                      ));
-                                    }
-                                )),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children:<Widget>[
+                                    MaterialButton(
+                                        color:Colors.blueGrey,
+                                        minWidth: 30,
+                                        height:40,
+                                        child: Text("Comment",
+                                            style:TextStyle(
+                                                fontSize:14,
+                                                color: Colors.white
+                                            )),
+                                        onPressed:(){
+                                          _msgBus.publish(MessageTopics.OpenEditing,CommandMessage(
+                                              params: {
+                                                "callback":(value){
+                                                  controller.postChat(content:value);
+                                                }
+                                              }
+                                          ));
+                                        }
+                                    ),
+                                    SizedBox(width:20,height:10),
+                                    (_state._item.status == POSTEDITEMSTATUS_POSTED)?
+                                    MaterialButton(
+                                        color:Colors.blue,
+                                        minWidth: 30,
+                                        height:40,
+                                        child: Text("Book",
+                                            style:TextStyle(
+                                                fontSize:14,
+                                                color: Colors.white
+                                            )),
+                                        onPressed:(){
+                                          controller.bookItem();
+                                        }
+                                    )
+                                        :null
+                                  ].where((widget)=>widget != null).toList()
+                                ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: _state._chats.map((chat)=>ChatWidget(chat)).toList(),
@@ -180,8 +215,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                               ],
                             )
                           ),
-
-                        ]
+                        ].where((widget)=>widget != null).toList()
                     )
                 )
             );

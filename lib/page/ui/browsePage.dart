@@ -36,7 +36,7 @@ class _BrowseState extends State<BrowsePage> {
                         children: <Widget>[
                           Icon(_appRuntimeInfo.categoryIcons[map['icon']],color:Colors.blueGrey[200]),
                           SizedBox(height:10,width:10),
-                          Text(map['value'],style:TextStyle(color:Colors.grey[200],fontSize:10)),
+                          Text(map['value'],style:TextStyle(color:Colors.grey[400],fontSize:10)),
                         ],
                       ),
                       onPressed:(){

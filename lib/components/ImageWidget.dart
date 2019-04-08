@@ -93,31 +93,37 @@ class _ImageWidgetState extends State<ImageWidget> {
   void initState(){
     super.initState();
     if(!loadFromRawData) {
-      tryFetchImageThumbNail(0).then((success) {
+      tryFetchImageThumbNail().then((success) async{
+        await waitUntilMounted();
         setState(() {
 
         });
       });
     }
   }
-  Future<bool> tryFetchImageThumbNail(int tryCount) async{
-    if(tryCount >= maxCount)
-      return true;
-    try{
-      await image.getThumbNail(size);
-      if(!image.thumbNailUrls.containsKey(ThumbNailSizeName[size])) {
-        return await Future.delayed(Duration(seconds: 3),
-                ()async{
-              return await tryFetchImageThumbNail(tryCount + 1);
-            });
-      } else {
-        return true;
+  Future<void> waitUntilMounted() async {
+    int tryCount = 0;
+    while(tryCount <= 3){
+      if(mounted)
+        break;
+      await Future.delayed(Duration(seconds:1),(){});
+      tryCount ++;
+    }
+    return;
+  }
+  Future<bool> tryFetchImageThumbNail() async{
+    int tryCount = 0;
+    while(tryCount < maxCount) {
+      try {
+        await image.getThumbNail(size);
+        if(image.thumbNailUrls.containsKey(ThumbNailSizeName[size])) {
+          break;
+        }
+      }catch(e){
+
       }
-    }catch(e){
-      return await Future.delayed(Duration(seconds: 3),
-              ()async{
-            return await tryFetchImageThumbNail(tryCount + 1);
-          });
+      await Future.delayed(Duration(seconds:3),(){});
+      tryCount ++;
     }
   }
   String _getImageUrl(){

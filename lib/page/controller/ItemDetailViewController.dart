@@ -21,6 +21,18 @@ class ItemDetailViewController {
     _state._chats.insert(0, nChat);
     sync();
   }
+  Future<bool> bookItem() async{
+    await Firestore.instance.runTransaction((Transaction tx) async{
+        _state._item.status = POSTEDITEMSTATUS_BOOKED;
+        _state._item.bookingUser = _appRuntimeInfo.currentUser;
+        DocumentReference ref = PostedItemDao.collectionRef.document(_state._item.id);
+        await tx.update(ref, {
+          'status':_state._item.status,
+          'bookingUser':_state._item.bookingUser.id
+        });
+    },timeout:Duration(seconds:30));
+    sync();
+  }
   void dispose(){
     _streamCtrl.close();
   }

@@ -8,9 +8,9 @@ class ItemWidget extends StatelessWidget {
   ItemWidget({this.item,this.isHorizontal = false,this.isAuto = false}) {
     if(this.isAuto){
       if(this.item.image.width > this.item.image.height) {
-        this.isHorizontal = true;
+        this.isHorizontal = false;
       } else {
-        this.isHorizontal = true;
+        this.isHorizontal = false;
         this.isRotateImage = true;
       }
     }
@@ -53,7 +53,9 @@ class ItemWidget extends StatelessWidget {
                 ))
           ]);
     List<Widget> contents = [
-      ImageWidget(
+      Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child:ImageWidget(
         image:item.image,
         size:ThumbNailSize.THUMBNAIL_SIZE_400,
         decorator: isRotateImage ? ImageDecorator(
@@ -61,7 +63,7 @@ class ItemWidget extends StatelessWidget {
             'quaterTurn':1
           }
         ):null,
-      ),
+      )),
       Container(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child:Column(

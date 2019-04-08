@@ -13,4 +13,7 @@ class AppRuntimeInfo {
   };
   final String IMG_PATH = 'Images';
   final String IMG_THUMBNAIL_PATH = 'thumbnails';
+  final String NOTIFICATION_CHANNEL_ID = "GARAGE_SALE_CHANNEL_ID";
+  final String NOTIFICATION_CHANNEL_NAME = "GARAGE_SALE_CHANNEL_NAME";
+  final String NOTIFICATION_CHANNEL_DESCRIPTION = "GARAGE_SALE_CHANNEL_DESCRIPTION";
 }
