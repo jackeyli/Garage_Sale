@@ -34,46 +34,43 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: !isLogin ? (<Widget>[
-              //Image.asset("assets/images/google_icon.png"),
-              Center(
-                child:Text('Garage Sale')
-              ),
-              RaisedButton(
-                onPressed: () {
-                  setState(() {
-                    isLogin = true;
-                    login();
-                  });
-                },
-                child:Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 200,
-                    maxHeight: 50
-                  ),
-                  height:30,
+      body:Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: !isLogin ? (<Widget>[
+        //Image.asset("assets/images/google_icon.png"),
+        Image.asset('assets/images/garage_sale.jpg'),
+        SizedBox(height:20,width:10),
+        Container(
+            width:200,
+            child:RaisedButton(
+              onPressed: () {
+                setState(() {
+                  isLogin = true;
+                  login();
+                });
+              },
+              color:Colors.blueAccent,
+              child:Container(
+                  height:50,
+                  padding: const EdgeInsets.symmetric(vertical: 5),
                   child:Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Image.asset("assets/images/google_icon.png"),
-                      Text('Log in with Google')
+                      SizedBox(width:10,height:10),
+                      Text('Login with Google',style:TextStyle(color:Colors.white,
+                          fontWeight: FontWeight.w900))
                     ],
                   )
-                ),
-              )
-            ]) : (<Widget>[
-              Center(child:LoadingSignal(message: 'Please wait...'))
-            ]),
-          ),
-        ],
-      ),
+              ),
+            )
+        )
+      ]) : (<Widget>[
+        Center(child:LoadingSignal(message: 'Please wait...'))
+      ]),
+    ),
     );
   }
 }
