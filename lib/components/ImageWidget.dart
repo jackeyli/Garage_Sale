@@ -85,7 +85,7 @@ class ImageWidget extends StatefulWidget {
 class _ImageWidgetState extends State<ImageWidget> {
   final _Image image;
   final ThumbNailSize size;
-  final int maxCount = 4;
+  final int maxCount = 6;
   final loadFromRawData;
   final ImageDecorator decorator;
   _ImageWidgetState({this.image,this.size = null,this.decorator,this.loadFromRawData});

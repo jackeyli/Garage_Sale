@@ -94,15 +94,17 @@ class ItemPostViewController {
     _state.currentEditingImage = img;
   }
   Future<bool> pickImage(ImageSource source) async{
+    File file = await ImagePicker.pickImage(source: source);
+    if(file == null)
+      return true;
     if(_state.currentEditingImage == null) {
       if (_state.image == null) {
-        _state.image = _Image.fromFile(await ImagePicker.pickImage(source: source));
+        _state.image = _Image.fromFile(file);
       } else {
         _state.descriptionImages.add(
-            _Image.fromFile(await ImagePicker.pickImage(source: source)));
+            _Image.fromFile(file));
       }
     } else {
-      File file = await ImagePicker.pickImage(source: source);
       if(_state.currentEditingImage == _state.image){
         _state.image.reloadFromFile(file);
       } else {
@@ -115,6 +117,7 @@ class ItemPostViewController {
       }
     }
     sync();
+    return true;
   }
 }
 
