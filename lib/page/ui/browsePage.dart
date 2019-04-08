@@ -59,7 +59,7 @@ class _BrowseState extends State<BrowsePage> {
                   FlatButton(
                       textColor: Colors.white,
                       color:Colors.blueGrey[600],
-                      child:Text('Post Item',style:TextStyle(color:Colors.white,fontWeight:FontWeight.bold)),
+                      child:Text('Post',style:TextStyle(color:Colors.white,fontWeight:FontWeight.bold)),
                       onPressed:(){
                         Navigator.of(context).pushNamed("/PostItem").then((result){
                           if(result != null) {
