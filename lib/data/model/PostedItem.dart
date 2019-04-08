@@ -71,9 +71,14 @@ class PostedItemDao {
       return await Future.wait(futures);
   }
   static Future<List<PostedItem>>searchByCategory(String category,int limit) async{
-    return getPostedItem(collectionRef.where("category",isEqualTo: category)
-        .orderBy("postedDate",descending: true)
-        .limit(limit));
+    if(limit < 0) {
+      return getPostedItem(collectionRef.where("category",isEqualTo: category)
+          .orderBy("postedDate",descending: true));
+    } else {
+      return getPostedItem(collectionRef.where("category", isEqualTo: category)
+          .orderBy("postedDate", descending: true)
+          .limit(limit));
+    }
   }
   static Future<List<PostedItem>>searchMyItem() async{
     return getPostedItem(collectionRef

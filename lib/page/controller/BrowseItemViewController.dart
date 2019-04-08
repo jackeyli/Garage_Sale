@@ -32,7 +32,7 @@ class BrowseItemViewController {
     _state.category = category;
     _state.isLoading = true;
     _streamCtrl.add(_state);
-    List<PostedItem> items = await PostedItemDao.searchByCategory(_state.category, 50);
+    List<PostedItem> items = await PostedItemDao.searchByCategory(_state.category, -1);
     _state.postedItems = items;
     _state.isLoading = false;
     sync();
