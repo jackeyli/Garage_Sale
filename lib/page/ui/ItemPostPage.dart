@@ -109,11 +109,15 @@ class _ItemPostState extends State<ItemPostPage> {
                                         .grey[200]))
                           ],
                         ),
-                        onPressed: () {
-                          controller
-                              .pickImage(
-                              ImageSource
-                                  .gallery);
+                        onPressed: () async{
+                          try {
+                            await controller
+                                .pickImage(
+                                ImageSource
+                                    .gallery);
+                          }catch(e) {
+                            showErrorDialog(context, e);
+                          }
                         }
                     ),
                     SizedBox(width: 8),
@@ -134,11 +138,15 @@ class _ItemPostState extends State<ItemPostPage> {
                                         .grey[200]))
                           ],
                         ),
-                        onPressed: () {
-                          controller
-                              .pickImage(
-                              ImageSource
-                                  .camera);
+                        onPressed: () async{
+                          try {
+                            await controller
+                                .pickImage(
+                                ImageSource
+                                    .camera);
+                          }catch(e) {
+                            showErrorDialog(context, e);
+                          }
                         }
                     )
                   ]
@@ -290,7 +298,11 @@ class _ItemPostState extends State<ItemPostPage> {
                                     onPressed: () async {
                                       if (_formKey.currentState.validate()) {
                                         _formKey.currentState.save();
-                                        await controller.postItem();
+                                        try {
+                                          await controller.postItem();
+                                        }catch(e){
+                                          showErrorDialog(context, "Unexpected Error happened, please contact support");
+                                        }
                                         if (bottomSheet != null) {
                                           bottomSheet.close();
                                           bottomSheet = null;

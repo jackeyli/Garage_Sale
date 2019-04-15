@@ -14,13 +14,14 @@ class MessageBus {
       listeners[topic].add(func);
     }
   }
+  void unsubscribeAll(String topic){
+    listeners[topic] = [];
+  }
   void unsubscribe(String topic,Function func) {
     if(!listeners.containsKey(topic)){
       listeners[topic] = [];
     }
-    if(listeners[topic].indexOf(func) >= 0) {
-      listeners[topic].remove(func);
-    }
+    listeners[topic].remove(func);
   }
   void publish(String topic,CommandMessage message){
     if(listeners.containsKey(topic)) {

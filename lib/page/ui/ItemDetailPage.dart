@@ -201,8 +201,12 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                                 fontSize:14,
                                                 color: Colors.white
                                             )),
-                                        onPressed:(){
-                                          controller.bookItem();
+                                        onPressed:() async{
+                                          try {
+                                           await controller.bookItem();
+                                          }catch(e) {
+                                            showErrorDialog(context, "Unexpected Error happened, please contact support");
+                                          }
                                         }
                                     )
                                         :null

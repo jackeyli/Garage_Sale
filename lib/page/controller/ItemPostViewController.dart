@@ -98,6 +98,9 @@ class ItemPostViewController {
     if(file == null)
       return true;
     if(_state.currentEditingImage == null) {
+      if(_state.descriptionImages.length >= 4) {
+        throw "You can take 5 picutre at most";
+      }
       if (_state.image == null) {
         _state.image = _Image.fromFile(file);
       } else {

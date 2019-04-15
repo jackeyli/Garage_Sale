@@ -54,50 +54,25 @@ AppRuntimeInfo _appRuntimeInfo = AppRuntimeInfo();
 MessageBus _msgBus = MessageBus();
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+void showErrorDialog(BuildContext context,String text){
+  showDialog(context: context,
+      builder: (_) =>
+          SimpleDialog(
+              title: Text('Error'),
+              children: <Widget>[Center(
+                  child:Text(text)
+              )
+              ]
+          ));
+}
 class GarageSaleApp extends StatefulWidget{
   @override
   State createState() => _GarageSaleAppState();
 }
 class _GarageSaleAppState extends State<GarageSaleApp> {
-  Future onSelectNotification(String payload) async {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (_)=>ItemDetailPage(itemId:payload))
-    );
-  }
-  Future<bool> _showNotification(Map<String,dynamic> message) async{
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        _appRuntimeInfo.NOTIFICATION_CHANNEL_ID, _appRuntimeInfo.NOTIFICATION_CHANNEL_NAME,
-        _appRuntimeInfo.NOTIFICATION_CHANNEL_DESCRIPTION,
-        importance: Importance.Max, priority: Priority.High);
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-        0, message['notification']['title'], message['notification']['body'], platformChannelSpecifics,
-      payload: message['data']['itemId']
-    );
-  }
   @override
   void initState(){
     super.initState();
-    var initializationSettingsAndroid =
-    new AndroidInitializationSettings('\@mipmap/ic_launcher');
-    var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
-    _firebaseMessaging.configure(
-        onMessage:(Map<String,dynamic> message) async{
-          _showNotification(message);
-        },
-        onLaunch:(Map<String,dynamic> message)async{
-          _showNotification(message);
-        },
-        onResume: (Map<String,dynamic> message)async{
-          _showNotification(message);
-        }
-    );
   }
   @override
   Widget build(BuildContext context) {
@@ -110,9 +85,9 @@ class _GarageSaleAppState extends State<GarageSaleApp> {
       ),
       home: new SplashPage(),
       routes: <String, WidgetBuilder>{
-      '/Login': (BuildContext context) => SplashPage(),
-      '/Home': (BuildContext context) => HomePage(),
-      '/PostItem': (BuildContext context) => ItemPostPage()
+        '/Login': (BuildContext context) => SplashPage(),
+        '/Home': (BuildContext context) => HomePage(),
+        '/PostItem': (BuildContext context) => ItemPostPage()
       },
     );
   }
