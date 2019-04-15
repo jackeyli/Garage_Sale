@@ -37,17 +37,6 @@ class _HomePageState extends State<HomePage> {
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
-    _firebaseMessaging.configure(
-        onMessage:(Map<String,dynamic> message) async{
-          _showNotification(message);
-        },
-        onLaunch:(Map<String,dynamic> message)async{
-          _showNotification(message);
-        },
-        onResume: (Map<String,dynamic> message)async{
-          _showNotification(message);
-        }
-    );
   }
   @override
   Widget build(BuildContext context) {
