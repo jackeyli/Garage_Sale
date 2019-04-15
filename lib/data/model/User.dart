@@ -30,13 +30,23 @@ class UserDao {
         iconUrl:snapshot.data['iconUrl']);
   }
   static Future<User> findUser(String id) async{
-    DocumentReference ref = await collectionRef.document(id);
-    DocumentSnapshot snap = await ref.get();
-    if(snap == null || !snap.exists) {
-      return null;
-    } else {
-      return fromSnapshot(snap);
-    }
+    debugger();
+    QuerySnapshot shots = await collectionRef.getDocuments();
+    debugger();
+    DocumentSnapshot shot = shots.documents[0];
+    debugger();
+    /*try{
+      DocumentSnapshot snap = await ref.get();
+      debugger();
+      if(snap == null || !snap.exists) {
+        return null;
+      } else {
+        return fromSnapshot(snap);
+      }
+    }catch(e){
+      debugger();
+    }*/
+    return null;
   }
   static Future<bool> createAndUpdateUser(String id,User user) async{
     DocumentReference ref = await collectionRef.document(id);

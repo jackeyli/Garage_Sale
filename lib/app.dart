@@ -9,7 +9,6 @@ import 'dart:typed_data';
 import 'dart:math' as math;
 import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -52,7 +51,7 @@ part 'package:garage_sale/page/controller/ItemDetailViewController.dart';
 part 'package:garage_sale/page/ui/userProfilePage.dart';
 AppRuntimeInfo _appRuntimeInfo = AppRuntimeInfo();
 MessageBus _msgBus = MessageBus();
-final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+//final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 class GarageSaleApp extends StatefulWidget{
   @override
@@ -87,7 +86,7 @@ class _GarageSaleAppState extends State<GarageSaleApp> {
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
-    _firebaseMessaging.configure(
+    /*_firebaseMessaging.configure(
         onMessage:(Map<String,dynamic> message) async{
           _showNotification(message);
         },
@@ -97,7 +96,7 @@ class _GarageSaleAppState extends State<GarageSaleApp> {
         onResume: (Map<String,dynamic> message)async{
           _showNotification(message);
         }
-    );
+    );*/
   }
   @override
   Widget build(BuildContext context) {
