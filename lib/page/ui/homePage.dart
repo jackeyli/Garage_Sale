@@ -4,6 +4,24 @@ class HomePage extends StatefulWidget {
   State createState() => new _HomePageState();
 }
 class _HomePageState extends State<HomePage> {
+  Future onSelectNotification(String payload) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context)=>ItemDetailPage(itemId: payload))
+    );
+  }
+  Future<bool> _showNotification(Map<String,dynamic> message) async{
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        _appRuntimeInfo.NOTIFICATION_CHANNEL_ID, _appRuntimeInfo.NOTIFICATION_CHANNEL_NAME,
+        _appRuntimeInfo.NOTIFICATION_CHANNEL_DESCRIPTION,
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, message['notification']['title'], message['notification']['body'], platformChannelSpecifics,
+        payload: message['data']['itemId']
+    );
+  }
   @override
   final List<Widget> pages = [];
   int _pageIndex = 0;
@@ -12,6 +30,24 @@ class _HomePageState extends State<HomePage> {
     pages.add(BrowsePage());
     pages.add(MyItemPage());
     pages.add(UserProfilePage());
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('\@mipmap/ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+    _firebaseMessaging.configure(
+        onMessage:(Map<String,dynamic> message) async{
+          _showNotification(message);
+        },
+        onLaunch:(Map<String,dynamic> message)async{
+          _showNotification(message);
+        },
+        onResume: (Map<String,dynamic> message)async{
+          _showNotification(message);
+        }
+    );
   }
   @override
   Widget build(BuildContext context) {

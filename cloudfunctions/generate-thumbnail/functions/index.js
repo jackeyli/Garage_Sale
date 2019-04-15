@@ -88,21 +88,13 @@ exports.generateThumbnail = functions.storage.object().onFinalize(async (object)
                                                              await spawn('convert', [tempLocalFile, '-thumbnail', `${sizeObject.width}x${sizeObject.height}>`,
                                                               tempLocalThumbFiles[index]], {capture: ['stdout', 'stderr']});
                                                              console.log('Thumbnail created at', tempLocalThumbFiles[index]);
+                                                             await bucket.upload(tempLocalThumbFiles[index],{destination:thumbFilePaths[index],metadata:metadata});
+                                                             console.log('Thumbnail uploaded to Storage at', thumbFilePaths[index]);
+                                                             fs.unlinkSync(tempLocalThumbFiles[index]);
                                                          })());
   await Promise.all(promises);
   console.log('Thumbnail create complete');
-  // Uploading the Thumbnail.
-  promises = tempLocalThumbFiles.map((tempPath,index)=>(
-    async()=>{
-        await bucket.upload(tempPath,{destination:thumbFilePaths[index],metadata:metadata});
-        console.log('Thumbnail uploaded to Storage at', thumbFilePaths[index]);
-    }
-  )());
-  await Promise.all(promises);
-  console.log('Thumbnail uploaded to Storage complete');
   // Once the image has been uploaded delete the local files to free up disk space.
   fs.unlinkSync(tempLocalFile);
-  tempLocalThumbFiles.forEach((tmpFile)=>{
-    fs.unlinkSync(tmpFile);
-  });
+  console.log('clear up');
 });

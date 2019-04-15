@@ -15,6 +15,11 @@ class _BrowseState extends State<BrowsePage> {
     itemWidget = ListViewWidgetItem(controller:controller.widgetController);
   }
   @override
+  void dispose(){
+    super.dispose();
+    controller.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream:controller._streamCtrl.stream,

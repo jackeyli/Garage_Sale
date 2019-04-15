@@ -17,6 +17,10 @@ class BrowseItemViewController {
         refreshItemView();
     });
   }
+  void dispose(){
+    _msgBus.unsubscribeAll(MessageTopics.RefreshPostItemList);
+    _streamCtrl.close();
+  }
   void updateItemList(){
       widgetController.updatePostedItems(_state.postedItems);
   }
