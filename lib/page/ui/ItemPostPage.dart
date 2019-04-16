@@ -273,7 +273,7 @@ class _ItemPostState extends State<ItemPostPage> {
                             Align(
                               alignment: FractionalOffset.centerRight,
                               child: Container(
-                                  width: 132,
+                                  width: 140,
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
                                   child: RaisedButton(
