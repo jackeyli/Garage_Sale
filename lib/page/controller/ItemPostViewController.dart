@@ -22,7 +22,7 @@ class ItemPostViewController {
       if(_state.image != null) {
         _state._item.image = _state.image;
         String downloadUrl = await (await FirebaseStorage.instance.ref().child("${_appRuntimeInfo.IMG_PATH}/ItemImages/descriptions/${ref.documentID}")
-            .child("imageUrl").putData(_state._item.image.data).onComplete).ref.getDownloadURL();
+            .child("imageUrl").putData(_state._item.image.data,StorageMetadata(contentType: 'image/png')).onComplete).ref.getDownloadURL();
         _state._item.image.imageUrl = downloadUrl;
         _state._item.image.imagePath = "ItemImages/descriptions/${ref.documentID}/imageUrl";
         await tx.update(ref,<String,dynamic>{'image':_state._item.image.toMap()});
@@ -33,7 +33,7 @@ class ItemPostViewController {
           _state._item.descriptionImages.add(_state.descriptionImages[i]);
           uploadFiles.add(new Future<String>(() async{
             return await (await FirebaseStorage.instance.ref().child("${_appRuntimeInfo.IMG_PATH}/ItemImages/descriptions/${ref.documentID}")
-                .child("descriptionImages_${i}").putData(_state._item.descriptionImages[i].data).onComplete).ref.getDownloadURL();
+                .child("descriptionImages_${i}").putData(_state._item.descriptionImages[i].data,StorageMetadata(contentType: 'image/png')).onComplete).ref.getDownloadURL();
           }));
           _state._item.descriptionImages[i].imagePath = "ItemImages/descriptions/${ref.documentID}/descriptionImages_${i}";
         }
