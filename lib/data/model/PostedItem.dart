@@ -44,7 +44,7 @@ class PostedItemDao {
             .map((val)=>_Image.fromMap(Map<String,dynamic>.from(val))).toList()),
         description: snapshot.data['description'],
         status:snapshot.data['status'],
-        postedDate:(snapshot.data['postedDate'] as Timestamp).toDate(),
+        postedDate:DateUtils.transformFirestoreDate(snapshot.data['postedDate']),
         id:snapshot.documentID
     );
     item.seller = await UserDao.findUser(snapshot.data['seller']);

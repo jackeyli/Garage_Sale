@@ -43,6 +43,7 @@ part 'package:garage_sale/data/model/Chat.dart';
 part 'package:garage_sale/data/model/PostedItem.dart';
 part 'package:garage_sale/util/Message.dart';
 part 'package:garage_sale/util/MessageBus.dart';
+part 'package:garage_sale/util/Utils.dart';
 part 'package:garage_sale/appRuntimeInfo.dart';
 part 'package:garage_sale/page/controller/MyItemsViewController.dart';
 part 'package:garage_sale/page/controller/UserProfileViewController.dart';
@@ -64,6 +65,7 @@ void showErrorDialog(BuildContext context,String text){
               ]
           ));
 }
+
 class GarageSaleApp extends StatefulWidget{
   @override
   State createState() => _GarageSaleAppState();

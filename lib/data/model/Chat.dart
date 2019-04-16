@@ -34,7 +34,7 @@ class ChatDao {
       replyTo:map['replyTo'],
       subChats:subChats,
       content:map['content'],
-      postedDate:(map['postedDate'] as Timestamp).toDate()
+      postedDate:DateUtils.transformFirestoreDate(map['postedDate'])
     );
   }
   static Future<Chat> fromSnapshot(DocumentSnapshot snapshot) async{
