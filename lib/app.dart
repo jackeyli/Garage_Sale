@@ -16,6 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:image/image.dart' as dartImage;
 part 'package:garage_sale/components/LoadingSignal.dart';
 part 'package:garage_sale/util/ThumbnailUtil.dart';
@@ -51,7 +52,7 @@ part 'package:garage_sale/page/controller/ItemDetailViewController.dart';
 part 'package:garage_sale/page/ui/userProfilePage.dart';
 AppRuntimeInfo _appRuntimeInfo = AppRuntimeInfo();
 MessageBus _msgBus = MessageBus();
-//final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 void showErrorDialog(BuildContext context,String text){
   showDialog(context: context,

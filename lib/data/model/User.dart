@@ -39,7 +39,6 @@ class UserDao {
         return fromSnapshot(snap);
       }
     }catch(e){
-      debugger();
     }
     return null;
   }
