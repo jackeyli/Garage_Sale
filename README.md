@@ -63,7 +63,7 @@ samples, guidance on mobile development, and a full API reference.
 	
 * Home page
 
-	![Home page](Demo/Home.png)
+	![Home page](Demo/ome.png)
 	
 	Success to log in! We have uploaded two test items and saved information in firebase, so that you can see them in the item part.
 
