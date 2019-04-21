@@ -24,6 +24,7 @@ class ViewPicturePage extends StatelessWidget {
       ));
     }
     return Scaffold(
+      appBar: AppBar(),
       body: Center(child:
           Container(
             constraints: BoxConstraints(minWidth: 150,minHeight: 150),

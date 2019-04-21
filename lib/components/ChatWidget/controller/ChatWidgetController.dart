@@ -1,13 +1,14 @@
 part of garage_sale;
 
 class ChatWidgetState {
-  Chat chat = null;
+  final Chat chat;
+  ChatWidgetState({this.chat});
 }
 
 class ChatWidgetController {
-  ChatWidgetState _state = ChatWidgetState();
+  ChatWidgetState _state = null;
   ChatWidgetController(Chat chat){
-    _state.chat = chat;
+    _state = ChatWidgetState(chat:chat);
   }
   StreamController<ChatWidgetState> _streamCtrl = StreamController<ChatWidgetState>();
   void dispose(){

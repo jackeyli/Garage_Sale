@@ -1,11 +1,9 @@
 part of garage_sale;
 class ChatWidget extends StatefulWidget{
-  _ChatWidgetState _state;
-  ChatWidget(Chat chat) {
-    _state = _ChatWidgetState(ChatWidgetController(chat));
-  }
+  final Chat  chat;
+  ChatWidget({this.chat});
   @override
-  State createState() => _state;
+  State createState() => _ChatWidgetState(ChatWidgetController(chat));
 }
 
 class _ChatWidgetState extends State<ChatWidget> {

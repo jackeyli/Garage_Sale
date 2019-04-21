@@ -12,18 +12,14 @@ class _SplashPageState extends State<SplashPage> {
     _auth.onAuthStateChanged
         .firstWhere((user) => user != null)
         .then((user) async{
-          debugger();
           User _user = await UserDao.findUser(user.uid);
-          debugger();
           if(_user == null) {
             _user = User(name: user.displayName,email:user.email,iconUrl: user.photoUrl);
             await UserDao.createAndUpdateUser(user.uid, _user);
           }
-          debugger();
           _appRuntimeInfo.currentUser = _user;
           isLogin = false;
-          //_firebaseMessaging.subscribeToTopic(_user.id);
-          debugger();
+          _firebaseMessaging.subscribeToTopic(_user.id);
           Navigator.of(context).pushReplacementNamed('/Home');
     });
     // Listen for our auth even (on reload or start)

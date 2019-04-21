@@ -18,7 +18,7 @@ class ItemDetailViewController {
     Chat nChat = Chat(postItemKey: _state._item.id,postUser: _appRuntimeInfo.currentUser,
     content:content);
     await ChatDao.saveChat(nChat);
-    _state._chats.insert(0, nChat);
+    _state._chats.add(nChat);
     sync();
   }
   Future<bool> bookItem() async{
